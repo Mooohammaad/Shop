@@ -1,5 +1,5 @@
-// بيانات السلع في المحل (يمكن استبدالها ببيانات حقيقية)
-const items = [
+// استرجاع بيانات السلع من localStorage أو استخدام البيانات الافتراضية إذا كانت غير موجودة
+let items = JSON.parse(localStorage.getItem('items')) || [
     { name: "سكر", price: 32 },
     { name: "رز", price: 26 },
     { name: "شاي", price: 10 },
@@ -10,7 +10,7 @@ const items = [
     { name: "كيس صابون مواعين", price: 3 },
     { name: "صابون بريحه", price: 5 },
     { name: "صابونه جوي", price: 13 },
-    { name: "سلك القطعه", price: 5 },
+    { name: "سلك القطعه", price: 3 },
     { name: "لفة سلك", price: 10 },
     { name: "كيس ملح عادي", price: 3 },
     { name: "كيس ملح بونو", price: 3.5 },
@@ -26,7 +26,7 @@ const items = [
     { name: "لبانه فرقع", price: 1 },
     { name: "لبانه سماره", price: 0.5 },
     { name: "كيس فول سوداني", price: 28 },
-    { name: "كوبايه وتلت كلور", price: 5 },
+    { name: "حوبايه وتلت كلور", price: 5 },
     { name: "كبس زهره", price: 6 },
     { name: "حقنه", price: 2 },
     { name: "قلم جاف", price: 3.5 },
@@ -47,16 +47,7 @@ const items = [
     { name: "كارتيه", price: 2 },
     { name: "خميره فوريه", price: 4 },
     { name: "عصير بودره كروز", price: 2 },
-    { name: "بودره نمل", price: 10 },
-    { name: "بسكويت ساده كبير", price: 5 },
-    { name: "بسكويت ساده صغير", price: 2 },
-    { name: "بيكنج بودر", price: 2.5 },
-    { name: "فانيليا", price: 1 },
-    { name: "كيس جلد انابيب", price: 1 },
-    { name: "كيك شيف", price: 6 },
-    { name: "قلم رصاص بلاستيك", price: 2.5
-    },
-    { name: "بلستر اسود وشفاف", price: 4 }
+    { name: "بودره نمل", price: 10 }
 ];
 
 // حدث تفعيل البحث أثناء الكتابة
@@ -88,3 +79,21 @@ function displayItems(itemsToShow) {
 
 // عرض كل العناصر عند تحميل الصفحة لأول مرة
 displayItems(items);
+
+// إضافة سلعة جديدة
+document.getElementById('addItemButton').addEventListener('click', function() {
+    const newItemName = document.getElementById('newItemName').value.trim();
+    const newItemPrice = parseFloat(document.getElementById('newItemPrice').value);
+
+    if (newItemName && !isNaN(newItemPrice)) {
+        items.push({ name: newItemName, price: newItemPrice });
+        localStorage.setItem('items', JSON.stringify(items)); // حفظ البيانات في localStorage
+        displayItems(items);
+        
+        // إعادة تعيين حقول الإدخال
+        document.getElementById('newItemName').value = '';
+        document.getElementById('newItemPrice').value = '';
+    } else {
+        alert('يرجى إدخال اسم السلعة وسعر صالحين.');
+    }
+});
